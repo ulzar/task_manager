@@ -19,6 +19,7 @@ class ListItemsBuilder<T> extends StatelessWidget {
       return _buildList(items);
     }
     if (snapshot.hasError) {
+      print(snapshot.error);
       return EmptyContent(
         title: "Something went wrong",
         message: "Can't load item right now",

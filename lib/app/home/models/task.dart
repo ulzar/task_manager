@@ -1,4 +1,6 @@
 import 'package:meta/meta.dart';
+import 'package:task_manager/app/home/models/entry.dart';
+import 'package:task_manager/services/database.dart';
 
 enum TaskType { recurring, oneoff }
 enum TaskRecurrence { everyDay, everyMonday, everyBusinessDay, everyWeekend }
@@ -29,24 +31,51 @@ class Task {
   final TaskType type;
   final bool important;
 
+  Entry createEntry(DateTime currentDay) {
+    return Entry(
+      id: documentIdFromCurrentDate(),
+      creationDate: currentDay,
+      taskId: id,
+      important: important,
+    );
+  }
+
+  static TaskRecurrence recurrenceFromString(dynamic input) {
+    final values = taskRecurrenceStrings.values.toList();
+    for (var i = 0; i < values.length; i++) {
+      if (values[i] ==input ) {
+        return taskRecurrenceStrings.keys.toList()[i];
+      }
+    }
+    return TaskRecurrence.everyMonday;
+  }
+
+  static TaskType typeFromString(dynamic input) {
+    final values = taskTypeStrings.values.toList();
+    for (var i = 0; i < values.length; i++) {
+      if (values[i] ==input ) {
+        return taskTypeStrings.keys.toList()[i];
+      }
+    }
+    return TaskType.oneoff;
+  }
+
   factory Task.fromMap(Map<String, dynamic> data, String documentId) {
     if (data == null) {
       return null;
     }
     final name = data['name'];
     final important = data['important'];
-    final TaskType type = data['type'];
-    TaskRecurrence rec = TaskRecurrence.everyDay;
-    if (type == TaskType.recurring) {
-      rec = data['recurrence'];
-    }
+    final TaskRecurrence recurrence = Task.recurrenceFromString(data['recurrence']);
+    final TaskType type = Task.typeFromString(data['recurrence']);
+    
 
     return Task(
       id: documentId,
       name: name,
       important: important,
       type: type,
-      recurrence: rec,
+      recurrence: recurrence,
     );
   }
 

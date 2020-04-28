@@ -165,7 +165,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
       _buildTaskTypeChild(context, fontSize),
       SizedBox(height: 12.0),
       if (_type == TaskType.recurring) ...[
-        _buildTaskRecurrenceChildd(context, fontSize),
+        _buildTaskRecurrenceChild(context, fontSize),
         SizedBox(height: 12.0),
       ],
       CheckboxListTile(
@@ -199,15 +199,18 @@ class _EditTaskPageState extends State<EditTaskPage> {
       );
   }
 
-  Widget _buildTaskRecurrenceChildd(BuildContext context, double fontSize) {
-    return DropdownButton<TaskRecurrence>(
-      isExpanded: true,
-      value: _recurrence,
-      onChanged: (TaskRecurrence newValue) {
+  _onTaskRecurrenceChange(TaskRecurrence newValue) {
         setState(() {
           _recurrence = newValue;
         });
-      },
+      }
+
+  Widget _buildTaskRecurrenceChild(BuildContext context, double fontSize) {
+    return DropdownButton<TaskRecurrence>(
+      
+      isExpanded: true,
+      value: _recurrence,
+      onChanged: _isCreateForm() ? _onTaskRecurrenceChange : null,
       items: TaskRecurrence.values.map((TaskRecurrence classType) {
         final taskRecurrenceString = taskRecurrenceStrings[classType];
         return DropdownMenuItem<TaskRecurrence>(

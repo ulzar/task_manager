@@ -31,6 +31,7 @@ class FirestoreService {
       query = queryBuilder(query);
     }
     final Stream<QuerySnapshot> snapshots = query.snapshots();
+    print("####collectionStream: $path");
     return snapshots.map((snapshot) {
       final result = snapshot.documents
           .map((snapshot) => builder(snapshot.data, snapshot.documentID))

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:task_manager/app/home/models/entry.dart';
 import 'package:task_manager/app/home/models/task.dart';
@@ -48,7 +49,7 @@ class FirestoreDatabase implements Database {
   Stream<List<Task>> tasksStream() => _service.collectionStream(
         path: APIPath.tasks(uid),
         builder: (data, documentId) => Task.fromMap(data, documentId),
-      );
+      ).asBroadcastStream();
 
   @override
   Stream<Task> taskStream({@required String taskId}) => _service.documentStream(
@@ -70,9 +71,13 @@ class FirestoreDatabase implements Database {
   Stream<List<Entry>> entriesStream({Task task}) =>
       _service.collectionStream<Entry>(
         path: APIPath.entries(uid),
-        queryBuilder: task != null
-            ? (query) => query.where('taskId', isEqualTo: task.id)
-            : null,
+        queryBuilder: (Query query) {
+          if (task != null) {
+            query = query.where('taskId', isEqualTo: task.id);
+          }
+
+          return query;
+        } ,
         builder: (data, documentID) => Entry.fromMap(data, documentID),
         // sort: (lhs, rhs) => rhs.start.compareTo(lhs.start),
       );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/app/home/cupertino_home_scaffold.dart';
 import 'package:task_manager/app/home/tab_items.dart';
 import 'package:task_manager/app/home/tasks/tasks_page.dart';
+import 'package:task_manager/app/home/entries/entries_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
 
   Map<TabItem, WidgetBuilder> get widgetBuilders {
     return {
-      TabItem.dailyEntries: (_) => Container(),
+      TabItem.dailyEntries: (_) => EntriesPage.create(context),
       TabItem.tasks: (_) => TasksPage(),
       TabItem.calendar: (_) => Container(),
       TabItem.account: (_) => Container(),

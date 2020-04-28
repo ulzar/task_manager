@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
 class Entry {
   Entry({
@@ -6,8 +7,8 @@ class Entry {
     @required this.creationDate,
     @required this.taskId,
     @required this.important,
-    @required this.completed,
-    @required this.completionDetail,
+     this.completed = false,
+    this.completionDetail = '',
   });
 
   String id;
@@ -17,13 +18,21 @@ class Entry {
   bool completed;
   bool important;
 
+  static String creationDatetimeFormat = 'yyyy-MM-dd';
 
-  factory Entry.fromMap(Map<dynamic, dynamic> value, String id) { 
-    final int creationMilliseconds = value['creation'];
+  static String creationDatetimeToString(DateTime input) {
+    return DateFormat(creationDatetimeFormat).format(input);
+  }
+
+  static DateTime parseCreationDateTimeString(String input) {
+    return DateFormat(creationDatetimeFormat).parse(input);
+  }
+
+  factory Entry.fromMap(Map<dynamic, dynamic> value, String id) {
     return Entry(
       id: id,
       taskId: value['taskId'],
-      creationDate: DateTime.fromMicrosecondsSinceEpoch(creationMilliseconds),
+      creationDate: parseCreationDateTimeString(value['creation']),
       completionDetail: value['completionDetail'],
       completed: value['completed'],
       important: value['important'],
@@ -31,12 +40,13 @@ class Entry {
   }
 
   Map<String, dynamic> toMap() {
+    final creationStr = creationDatetimeToString(creationDate);
     return <String, dynamic>{
       'taskId': taskId,
       'completionDetail': completionDetail,
       'completed': completed,
       'important': important,
-      'creation': creationDate.millisecondsSinceEpoch,
+      'creation': creationStr,
     };
   }
 }

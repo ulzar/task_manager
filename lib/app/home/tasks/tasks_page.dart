@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:task_manager/app/home/tasks/edit_task_page.dart';
 import 'package:task_manager/app/home/tasks/task_list_tile.dart';
 import 'package:task_manager/app/home/tasks/list_items_builder.dart';
+import 'package:task_manager/app/home/task_entries/task_entries_page.dart';
 import 'package:task_manager/app/home/models/task.dart';
 import 'package:task_manager/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:task_manager/services/database.dart';
@@ -47,7 +48,7 @@ class TasksPage extends StatelessWidget {
             key: Key('task-${task.id}'),
             child: TaskListTile(
               task: task,
-              // onTap: () => TaskEntriesPage.show(context, task),
+              onTap: () => TaskEntriesPage.show(context, task),
             ),
           ),
         );
