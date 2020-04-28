@@ -15,6 +15,9 @@ class DayController {
     // _currentDay = new BehaviorSubject<DateTime>();
   }
 
+  static int furthestDayInPast = 60;
+  static int furthestDayInFuture = 7;
+
   static String prettyPrint(DateTime inputDate) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -36,15 +39,45 @@ class DayController {
   Observable<DateTime> get stream => _dayStream;
   DateTime get currentDay => _currentDay;
 
-  void selectNextDay() {
+  bool canSelectNextDay(DateTime currentDay) {
+    if (currentDay == null) {
+      return false;
+    }
+    final now = DateTime.now();
+    final futureNextDay = DateTime(currentDay.year, currentDay.month, currentDay.day+1);
+    final futureLimit = DateTime(now.year, now.month, now.day + furthestDayInFuture);
+    print('* canSelectNextDay. futureLimit=$futureLimit & currentDay=$currentDay');
+    if (futureLimit.compareTo(futureNextDay) < 0) {
+      return false;
+    }
+    return true;
+   }
+
+   bool canSelectPreviousDay(DateTime currentDay) {
+     if (currentDay == null) {
+      return false;
+    }
+    final now = DateTime.now();
+    final futurePreviousDay = DateTime(currentDay.year, currentDay.month, currentDay.day-1);
+    final pastLimit = DateTime(now.year, now.month, now.day - furthestDayInPast);
+    print('* canSelectPreviousDay. pastLimit=$pastLimit & currentDay=$currentDay');
+    if (futurePreviousDay.compareTo(pastLimit) <= 0) {
+      return false;
+    }
+    return true;
+   }
+
+  void selectNextDay(DateTime currentDay) {
+    print('selectNextDay');
     _dayStream.add(
-      _currentDay.add(new Duration(days: 1)),
+      currentDay.add(new Duration(days: 1)),
     );
   }
 
-  void selectPreviousDay() {
+  void selectPreviousDay(DateTime currentDay) {
+    print('selectPreviousDay');
     _dayStream.add(
-      _currentDay.add(new Duration(days: -1)),
+      currentDay.add(new Duration(days: -1)),
     );
   }
 

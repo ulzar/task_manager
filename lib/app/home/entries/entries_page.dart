@@ -21,6 +21,21 @@ class EntriesPage extends StatelessWidget {
     );
   }
 
+  Future<void> _selectCalendarDay(BuildContext context) async {
+    final DateTime currentDay = dayController.currentDay;
+    final DateTime today = DateTime.now();
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: currentDay,
+      firstDate: today.add(-new Duration(days: DayController.furthestDayInPast)), 
+      lastDate: today.add(new Duration(days: DayController.furthestDayInFuture)),
+    );
+    if (picked != null) {
+      // Add the new day 
+      dayController.selectSpecificDay(picked);
+    }
+  }
+
    Widget _buildDayPicker(BuildContext context) {
      return StreamBuilder<DateTime>(
        initialData: new DateTime.now(),
@@ -33,7 +48,7 @@ class EntriesPage extends StatelessWidget {
                 icon: Icon(
                   Icons.chevron_left,
                 ),
-                onPressed: () => dayController.selectPreviousDay(),
+                onPressed: dayController.canSelectPreviousDay(currentDay) ? () => dayController.selectPreviousDay(currentDay) : null,
               ),
               Expanded(
                 child: Text(
@@ -49,7 +64,7 @@ class EntriesPage extends StatelessWidget {
                 icon: Icon(
                   Icons.chevron_right,
                 ),
-                onPressed: () => dayController.selectNextDay(),
+                onPressed: dayController.canSelectNextDay(currentDay) ? () => dayController.selectNextDay(currentDay) : null,
               ),
             ],
           );
@@ -64,6 +79,10 @@ class EntriesPage extends StatelessWidget {
         title: Text('Entries'),
         elevation: 2.0,
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.calendar_today, color: Colors.white),
+            onPressed: () => _selectCalendarDay(context),
+          ),
           IconButton(
             icon: Icon(Icons.add, color: Colors.white),
             onPressed: () => TaskPickerPage.show(

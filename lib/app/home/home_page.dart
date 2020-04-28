@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/app/home/account/account_page.dart';
 import 'package:task_manager/app/home/cupertino_home_scaffold.dart';
 import 'package:task_manager/app/home/tab_items.dart';
 import 'package:task_manager/app/home/tasks/tasks_page.dart';
@@ -15,7 +16,6 @@ class _HomePageState extends State<HomePage> {
   final Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
     TabItem.dailyEntries: GlobalKey<NavigatorState>(),
     TabItem.tasks: GlobalKey<NavigatorState>(),
-    TabItem.calendar: GlobalKey<NavigatorState>(),
     TabItem.account: GlobalKey<NavigatorState>(),
   };
 
@@ -23,8 +23,7 @@ class _HomePageState extends State<HomePage> {
     return {
       TabItem.dailyEntries: (_) => EntriesPage.create(context),
       TabItem.tasks: (_) => TasksPage(),
-      TabItem.calendar: (_) => Container(),
-      TabItem.account: (_) => Container(),
+      TabItem.account: (_) => AccountPage(),
     };
   }
 
